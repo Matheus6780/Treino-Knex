@@ -1,5 +1,5 @@
 import * as Knex from "knex";
-
+const { onUpdateTrigger } = require('../../../knexfile')
 
 export async function up(knex: Knex): Promise<any> {
     return knex.schema.createTable('projects', table => {
@@ -10,7 +10,7 @@ export async function up(knex: Knex): Promise<any> {
         .onDelete('CASCADE')
 
         table.timestamps(true, true)
-    })
+    }).then(() => knex.raw(onUpdateTrigger('projects')))
 }
 
 

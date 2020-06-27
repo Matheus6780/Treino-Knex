@@ -7,7 +7,8 @@ import { NextFunction } from 'express'
 export default {
     
     async index (req: Request, res: Response) {
-        const results = await knex('users')
+
+        const results = await knex('users').where('deleted_at', null)
     
         return res.json(results)
     },
@@ -69,7 +70,8 @@ export default {
         try {
             if (!id) return res.status(400).send()
 
-            await knex('users').where({ id }).del()
+            await knex('users').where({ id }).update('deleted_at', new Date())
+            //.del()
 
             return res.send()
 

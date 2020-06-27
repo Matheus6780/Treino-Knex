@@ -1,4 +1,6 @@
 import path from 'path'
+import { CreateTableBuilder } from 'knex'
+
 // Update with your config settings.
 
 // Aparentemente só funciona com o module.exports
@@ -19,6 +21,15 @@ module.exports = {
     seeds: {
       directory: path.resolve(__dirname, 'src', 'database', 'seeds')
     }
+  },
+
+  onUpdateTrigger: (table: CreateTableBuilder) => {
+    return `
+  CREATE TRIGGER ${table}_updated_at
+  BEFORE UPDATE ON ${table}
+  FOR EACH ROW
+  EXECUTE PROCEDURE on_update_timestamp();
+  `;
   },
 
   staging: {
